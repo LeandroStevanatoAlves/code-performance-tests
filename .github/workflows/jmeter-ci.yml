@@ -20,7 +20,7 @@ jobs:
       - name: Executa os Testes de Performance
         uses: QAInsights/PerfAction@v5.6.2
         with:
-            test-plan-path: ./tests/amazon_test.jmx
+            test-plan-path: tests/amazon_test.jmx
             args: ""
 
       - name: Publica os Relatórios como Artefatos
