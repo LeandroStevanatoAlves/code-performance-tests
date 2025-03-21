@@ -1,0 +1,36 @@
+name: JMeter Performance Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar JMeter
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jdk
+          wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.2.tgz
+          tar -xzf apache-jmeter-5.6.2.tgz
+          mv apache-jmeter-5.6.2 jmeter
+
+      - name: Executa os Testes de Performance
+        run: |
+          jmeter/bin/jmeter -n -t tests/amazon_test.jmx -l results/results.jtl -e -o results/reports/
+
+      - name: Publica os Relatórios como Artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-report
+          path: results/reports/
